@@ -1,4 +1,5 @@
-# Three.js Journey
+# 3D Interactions - made with Three.js
+Experiments while learning Three.js 🤓
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
