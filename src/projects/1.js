@@ -1,9 +1,10 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import GUI from 'lil-gui'
+// import GUI from 'lil-gui'
+import gsap from 'gsap';
 
 // Debug
-const gui = new GUI()
+// const gui = new GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -39,7 +40,6 @@ torusKnot.scale.set(1.4, 1.4)
 scene.add(torusKnot)
 
 // Mouse tracking
-// TODO: Add button to move light automatically (like a firefly?)
 let cursor = {}
 
 function handleMouseMove (e) {
@@ -48,6 +48,35 @@ function handleMouseMove (e) {
 }
 
 window.addEventListener('mousemove', handleMouseMove)
+
+// Firefly
+let firefly = null
+function createLight () {
+  const group = new THREE.Group()
+  scene.add(group)
+
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.03),
+    new THREE.MeshStandardMaterial({
+      color: '#ffffff',
+      emissive: '#ffffff'
+    })
+  )
+
+  group.add(sphere)
+
+  const light = new THREE.PointLight('#ffebb0', 100, 100, 1)
+
+  group.position.x = -1.5
+  group.position.y= -1.5
+  group.add(light)
+  firefly = group
+}
+
+const fireflyBtn = document.querySelector('#firefly-btn')
+fireflyBtn.addEventListener('click', () => {
+  createLight()
+})
 
 // Sizes
 const sizes = {
@@ -81,8 +110,8 @@ controls.enableDamping = true
 controls.enabled = false
 
 // Debug panel
-gui.add(torusKnotMaterial, 'metalness').step(0.01).min(0).max(2)
-gui.add(torusKnotMaterial, 'roughness').step(0.01).min(0).max(1)
+// gui.add(torusKnotMaterial, 'metalness').step(0.01).min(0).max(2)
+// gui.add(torusKnotMaterial, 'roughness').step(0.01).min(0).max(1)
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -119,6 +148,19 @@ const tick = () =>
     }
 
     pointLight.intensity = intensity
+
+    // Firefly
+    if(firefly) {
+      gsap.timeline().to(firefly.position, {
+        x: `random(0, 4)`, 
+        y: `random(0, 2)`,
+        duration: 3,
+        ease: "none",
+        repeat: -1,
+        yoyo: true,
+        repeatRefresh: true
+      });
+    }
 
     // Update controls
     controls.update()
