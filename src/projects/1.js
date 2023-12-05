@@ -78,7 +78,7 @@ scene.add(camera)
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
-// controls.enabled = false
+controls.enabled = false
 
 // Debug panel
 gui.add(torusKnotMaterial, 'metalness').step(0.01).min(0).max(2)
