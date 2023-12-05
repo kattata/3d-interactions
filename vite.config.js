@@ -1,12 +1,6 @@
-import { resolve } from 'path'
-import {sync} from 'glob';
+import { sync}  from 'glob';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-
-const dist = {
-  main: resolve(__dirname, 'src/index.html'),
-  projects: []
-}
 
 export default {
     publicDir: '../static/',
@@ -21,6 +15,7 @@ export default {
         outDir: '../dist',
         emptyOutDir: true,
         rollupOptions: {
+          // Add an index.html and a folder for each folder containing a .html file
             input: Object.fromEntries(
               sync('src/**/*.html').map(file => [
                   path.relative(
@@ -30,10 +25,6 @@ export default {
                   fileURLToPath(new URL(file, import.meta.url))
                 ])
             )
-            // input: {
-            //   main: resolve(__dirname, 'src/index.html'),
-            //   projects: resolve(__dirname, 'src/projects/1.html')
-            // },
           }
   },
 }
