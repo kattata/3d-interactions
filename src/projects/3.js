@@ -19,6 +19,17 @@ scene.add(pointLight)
 const ambientLight = new THREE.AmbientLight('#ffffff', 0.01)
 scene.add(ambientLight)
 
+// Objects
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(100, 100),
+  new THREE.MeshStandardMaterial({
+    side: THREE.DoubleSide,
+    color: '#9B7672'
+  })
+)
+floor.rotation.x = Math.PI * 0.5
+floor.position.y = 0.1
+
 // Models
 const gltfLoader = new GLTFLoader()
 
@@ -30,25 +41,18 @@ gltfLoader.load(
   (gltf) => {
     mixer = new THREE.AnimationMixer(gltf.scene)
     action = mixer.clipAction(gltf.animations[0])
-    // action.clampWhenFinished = true
     action.play()
     
     gltf.scene.scale.set(2, 2, 2)
     scene.add(gltf.scene)
+
+    // Handle after model has been loaded
+    scene.add(floor)
+
+    const loader = document.querySelector('#loading')
+    loader.style.display = 'none'
   }
 )
-
-// Objects
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(100, 100),
-  new THREE.MeshStandardMaterial({
-    side: THREE.DoubleSide,
-    color: '#9B7672'
-  })
-)
-floor.rotation.x = Math.PI * 0.5
-floor.position.y = 0.1
-scene.add(floor)
 
 // Play/pause animation
 let isPlaying = true
